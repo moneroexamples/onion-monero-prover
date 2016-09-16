@@ -18,14 +18,14 @@ namespace xmreg
         p.add("txhash", -1);
 
         options_description desc(
-                "xmrblocks, start Onion Monero Blockchain Explorer");
+                "xmrprover, start Onion Monero Prover");
 
         desc.add_options()
                 ("help,h", value<bool>()->default_value(false)->implicit_value(true),
                  "produce help message")
                 ("testnet,t", value<bool>()->default_value(false)->implicit_value(true),
                  "use testnet blockchain")
-                ("port,p", value<string>()->default_value("8081"),
+                ("port,p", value<string>()->default_value("8083"),
                  "default port")
                 ("bc-path,b", value<string>(),
                  "path to lmdb blockchain")
