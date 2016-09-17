@@ -1,24 +1,22 @@
-# Onion Monero Blockchain Explorer
+# Onion Monero Prover
 
-Curently available Monero blockchain explorer websites have several limitations which are of special importance to privacy-oriented users:
+Currently, to prove to someone that you send him/her Monero, one can use
+ this service [checktx](http://xmr.llcoins.net/checktx.html). However,
+ this has some limitations:
 
- - they use JavaScript,
- - have images which might be used for [cookieless tracking](http://lucb1e.com/rp/cookielesscookies/),
- - track users activates through google analytics,
- - are closed sourced,
- - are not available as hidden services,
- - provide only basic search capabilities,
- - can't identify users outputs based on provided Monero address and viewkey.
+ - it uses JavaScript, 
+ - it is not available as hidden services,
+ - it is dependant on a third party service, i.e., http://moneroblocks.info,
+ which is closed sourced.
 
 
 In this example, these limitations are addressed by development of
-an Onion Monero Blockchain Explorer. The example not only shows how to use Monero C++ libraries, but also demonstrates how to use:
+an Onion Monero Prover. The prover is
 
- - [crow](https://github.com/ipkn/crow) - C++ micro web framework
- - [lmdb++](https://github.com/bendiken/lmdbxx) - C++ wrapper for the LMDB
- - [mstch](https://github.com/no1msd/mstch) - C++ {{mustache}} templates
- - [rapidjson](https://github.com/miloyip/rapidjson) - C++ JSON parser/generator
-
+ - fully open sourced, 
+ - does not depend on any third party services, 
+ - it does not require JavaScript, and
+ - is avaliable as a hidden service 
 
 ## Address
 
@@ -51,7 +49,7 @@ as shown here:
 ![Onion Monero Blockchain Explorer](https://raw.githubusercontent.com/moneroexamples/onion-monero-blockchain-explorer/master/screenshot/screenshot.jpg)
 
 
-## Compile and run the explorer
+## Compile and run the prover
 
 ##### Monero headers and libraries setup
 
@@ -90,15 +88,8 @@ To run it:
 ./xmrprover
 ```
 
-Example output:
 
-```bash
-[mwo@arch onion-monero-prover$ ./xmrprover
-2016-May-28 10:04:49.160280 Blockchain initialized. last block: 1056761, d0.h0.m12.s47 time ago, current difficulty: 1517857750
-(2016-05-28 02:04:49) [INFO    ] Crow/0.1 server is running, local port 8081
-```
-
-Go to your browser: http://127.0.0.1:8081
+Go to your browser: http://127.0.0.1:8083
 
 
 ## Other examples
