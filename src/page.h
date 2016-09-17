@@ -1083,7 +1083,9 @@ namespace xmreg {
             // to create, so called, derived key.
             key_derivation derivation;
 
-            if (!generate_key_derivation(txd.pk, tx_prv_key, derivation))
+            if (!generate_key_derivation(address.m_view_public_key,
+                                         tx_prv_key,
+                                         derivation))
             {
                 cerr << "Cant get dervied key for: "  << "\n"
                      << "pub_tx_key: " << txd.pk << " and "
