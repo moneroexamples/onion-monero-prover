@@ -16,7 +16,7 @@ an Onion Monero Prover. The prover is
  - fully open sourced, 
  - does not depend on any third party services, 
  - it does not require JavaScript, and
- - is avaliable as a hidden service 
+ - is available as a hidden service 
 
 ## Address
 
