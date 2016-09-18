@@ -4,7 +4,7 @@ Currently, to prove to someone that you send him/her Monero, one can use
  this service [checktx](http://xmr.llcoins.net/checktx.html). However,
  this has some limitations:
 
- - it uses JavaScript, 
+ - it uses JavaScript,
  - it is not available as hidden services,
  - it is dependant on a third party service, i.e., http://moneroblocks.info,
  which is closed sourced.
@@ -13,20 +13,16 @@ Currently, to prove to someone that you send him/her Monero, one can use
 In this example, these limitations are addressed by development of
 an Onion Monero Prover. The prover is
 
- - fully open sourced, 
- - does not depend on any third party services, 
+ - fully open sourced,
+ - does not depend on any third party services,
  - it does not require JavaScript, and
- - is available as a hidden service 
+ - is available as a hidden service
 
 ## Address
 
 Tor users:
 
- - [http://xmrblocksvckbwvx.onion](http://xmrblocksvckbwvx.onion)
-
-Non tor users, can use its clearnet version (thanks to [Gingeropolous](https://github.com/Gingeropolous)):
-
- - [http://explore.MoneroWorld.com](http://explore.moneroworld.com)
+ - [xmrproverytqpkw7.onion](xmrproverytqpkw7.onion)
 
 
 ## Prerequisite
@@ -37,16 +33,10 @@ Instruction for Monero 0.9 compilation and Monero headers and libraries setup ar
 as shown here:
  - [Compile Monero 0.9 on Ubuntu 16.04 x64](https://github.com/moneroexamples/compile-monero-09-on-ubuntu-16-04)
 
-## C++ code
-
-```c++
-```
-
-
 
 ## Example screenshot
 
-![Onion Monero Blockchain Explorer](https://raw.githubusercontent.com/moneroexamples/onion-monero-blockchain-explorer/master/screenshot/screenshot.jpg)
+![Onion Monero Prover](https://raw.githubusercontent.com/moneroexamples/onion-monero-prover/master/screen/screenshot01.jpg)
 
 
 ## Compile and run the prover
@@ -63,8 +53,8 @@ The Onion Prover uses Monero C++ libraries and headers. Also some functionality
 - https://github.com/moneroexamples/compile-monero-09-on-arch-linux (Arch Linux)
 
 
-##### Compile and run the prover
-Once the Monero is compiled and setup, the explorer can be downloaded and compiled
+##### Compile and run 
+Once the Monero is compiled and setup, the prover can be downloaded and compiled
 as follows:
 
 ```bash
@@ -82,11 +72,6 @@ make
 ```
 
 When compilation finishes executable `xmrprover` should be created.
-
-To run it:
-```
-./xmrprover
-```
 
 
 Go to your browser: http://127.0.0.1:8083
