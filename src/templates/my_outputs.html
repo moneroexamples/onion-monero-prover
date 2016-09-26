@@ -1,6 +1,18 @@
 
 <div>
 
+    <H4 style="margin:5px">Tx hash: {{tx_hash}}</H4>
+    <H5 style="margin:5px">Tx public key: {{tx_pub_key}}</H5>
+
+
+    {{#has_payment_id}}
+    <H5 style="margin:5px">Payment id: {{payment_id}}</H5>
+    {{/has_payment_id}}
+
+    {{#has_payment_id8}}
+    <H5 style="margin:5px">Payment id (encrypted): {{payment_id8}}</H5>
+    {{/has_payment_id8}}
+
 
     <table class="center" style="width: 80%; margin-top:10px">
         <tr>
@@ -13,13 +25,16 @@
 
     </table>
 
-    <h3>Checking which outputs of the given transaction
-        were send to the given address
-    </h3>
-
-    <H5 style="margin:5px">Tx hash: {{tx_hash}}</H5>
-    <h5>Tx private key: {{tx_prv_key}}</h5>
-    <h5>Recipient's address: {{xmr_address}}</h5>
+    {{^tx_prove}}
+        <h3>Checking which outputs belong to the given address and viewkey</h3>
+        <h5>address: {{xmr_address}}</h5>
+        <h5>viewkey: {{viewkey}}</h5>
+    {{/tx_prove}}
+    {{#tx_prove}}
+        <h3>Prove that you send this tx to the given address</h3>
+        <h5>address: {{xmr_address}}</h5>
+        <h5>Tx private key: {{viewkey}}</h5>
+    {{/tx_prove}}
 
     <h3>Outputs ({{outputs_no}})</h3>
     <div class="center">
@@ -34,14 +49,14 @@
                 <td>{{output_idx}}: {{out_pub_key}}</td>
                 <td>{{amount}}</td>
                 {{#mine_output}}
-                    <td>
+                <td>
                         <span style="color: #008009;font-weight: bold">
                         {{mine_output}}
                         </span>
-                    </td>
+                </td>
                 {{/mine_output}}
                 {{^mine_output}}
-                    <td>{{mine_output}}</td>
+                <td>{{mine_output}}</td>
                 {{/mine_output}}
             </tr>
             {{/outputs}}

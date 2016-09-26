@@ -131,7 +131,7 @@ int main(int ac, const char* av[]) {
         string tx_prv_key  = string(req.url_params.get("txprvkey"));
         string xmr_address = string(req.url_params.get("xmraddress"));
 
-        return xmrblocks.show_my_outputs(tx_hash, xmr_address, tx_prv_key);
+        return xmrblocks.show_prove(tx_hash, xmr_address, tx_prv_key);
     });
 
     // run the crow http server

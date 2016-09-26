@@ -921,17 +921,18 @@ namespace xmreg {
         string
         show_my_outputs(string tx_hash_str,
                         string xmr_address_str,
-                        string tx_prv_key_str)
+                        string viewkey_str, /* or tx_prv_key_str when tx_prove == true */
+                        bool tx_prove = false)
         {
 
             // remove white characters
             boost::trim(tx_hash_str);
             boost::trim(xmr_address_str);
-            boost::trim(tx_prv_key_str);
+            boost::trim(viewkey_str);
 
             if (tx_hash_str.empty())
             {
-                return string("tx hash/id not provided!");
+                return string("tx hash not provided!");
             }
 
             if (xmr_address_str.empty())
@@ -939,9 +940,12 @@ namespace xmreg {
                 return string("Monero address not provided!");
             }
 
-            if (tx_prv_key_str.empty())
+            if (viewkey_str.empty())
             {
-                return string("Tx private key not provided!");
+                if (!tx_prove)
+                    return string("Viewkey not provided!");
+                else
+                    return string("Tx private key not provided!");
             }
 
             // parse tx hash string to hash object
@@ -962,13 +966,13 @@ namespace xmreg {
                 return string("Cant parse xmr address: " + xmr_address_str);
             }
 
-            // parse string representing given private viewkey
-            crypto::secret_key tx_prv_key;
+            // parse string representing given private key
+            crypto::secret_key prv_view_key;
 
-            if (!xmreg::parse_str_secret_key(tx_prv_key_str, tx_prv_key))
+            if (!xmreg::parse_str_secret_key(viewkey_str, prv_view_key))
             {
-                cerr << "Cant parse view key: " << tx_prv_key_str << endl;
-                return string("Cant parse view key: " + tx_prv_key_str);
+                cerr << "Cant parse the private key: " << viewkey_str << endl;
+                return string("Cant parse private key: " + viewkey_str);
             }
 
             // tx age
@@ -1058,10 +1062,8 @@ namespace xmreg {
                     {"testnet"              , testnet},
                     {"tx_hash"              , tx_hash_str},
                     {"xmr_address"          , xmr_address_str},
-                    {"tx_prv_key"           , REMOVE_HASH_BRAKETS(
-                                                      fmt::format("{:s}", tx_prv_key))},
-                    {"tx_pub_key"           , REMOVE_HASH_BRAKETS(
-                                                      fmt::format("{:s}", txd.pk))},
+                    {"viewkey"              , viewkey_str},
+                    {"tx_pub_key"           , REMOVE_HASH_BRAKETS(fmt::format("{:s}", txd.pk))},
                     {"blk_height"           , tx_blk_height_str},
                     {"tx_size"              , fmt::format("{:0.4f}",
                                                           static_cast<double>(txd.size) / 1024.0)},
@@ -1072,7 +1074,8 @@ namespace xmreg {
                     {"has_payment_id"       , txd.payment_id  != null_hash},
                     {"has_payment_id8"      , txd.payment_id8 != null_hash8},
                     {"payment_id"           , pid_str},
-                    {"payment_id8"          , pid8_str}
+                    {"payment_id8"          , pid8_str},
+                    {"tx_prove"             , tx_prove}
             };
 
             string server_time_str = xmreg::timestamp_to_str(server_timestamp, "%F");
@@ -1083,17 +1086,16 @@ namespace xmreg {
             // to create, so called, derived key.
             key_derivation derivation;
 
-            if (!generate_key_derivation(address.m_view_public_key,
-                                         tx_prv_key,
-                                         derivation))
+            public_key pub_key = tx_prove ? address.m_view_public_key : txd.pk;
+
+            if (!generate_key_derivation(pub_key, prv_view_key, derivation))
             {
-                cerr << "Cant get dervied key for: "  << "\n"
-                     << "pub_tx_key: " << txd.pk << " and "
-                     << "tx_prv_key" << tx_prv_key << endl;
+                cerr << "Cant get derived key for: "  << "\n"
+                     << "pub_tx_key: " << pub_key << " and "
+                     << "prv_view_key" << prv_view_key << endl;
 
                 return string("Cant get key_derivation");
             }
-
 
             mstch::array outputs;
 
@@ -1111,15 +1113,15 @@ namespace xmreg {
                 // get the tx output public key
                 // that normally would be generated for us,
                 // if someone had sent us some xmr.
-                public_key pubkey;
+                public_key tx_pubkey;
 
                 derive_public_key(derivation,
                                   output_idx,
                                   address.m_spend_public_key,
-                                  pubkey);
+                                  tx_pubkey);
 
                 // check if generated public key matches the current output's key
-                bool mine_output = (outp.first.key == pubkey);
+                bool mine_output = (outp.first.key == tx_pubkey);
 
                 // if mine output has RingCT, i.e., tx version is 2
                 if (mine_output && tx.version == 2)
@@ -1130,8 +1132,8 @@ namespace xmreg {
                     bool r;
 
                     r = decode_ringct(tx.rct_signatures,
-                                      txd.pk,
-                                      tx_prv_key,
+                                      pub_key,
+                                      prv_view_key,
                                       i,
                                       tx.rct_signatures.ecdhInfo[i].mask,
                                       money_transfered[i]);
@@ -1180,6 +1182,14 @@ namespace xmreg {
 
             // render the page
             return mstch::render(full_page, context);
+        }
+
+        string
+        show_prove(string tx_hash_str,
+                        string xmr_address_str,
+                        string tx_prv_key_str)
+        {
+            return show_my_outputs(tx_hash_str, xmr_address_str, tx_prv_key_str, true);
         }
 
         string
